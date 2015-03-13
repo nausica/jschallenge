@@ -22,7 +22,7 @@ angular
     		templateUrl: 'views/main.html',
     		controller: 'MainController'
     	}).
-    	when('/map', {
+    	when('/availability', {
         	templateUrl: 'views/map.html',
         	controller: 'MapController'
       	}).

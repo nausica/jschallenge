@@ -11,8 +11,6 @@ angular.module("mapsModule", ['uiGmapgoogle-maps'])
 		libraries: 'weather,geometry,visualization'
 	});
 }])
-
-
 .controller("MapController",['$scope', '$timeout', 'uiGmapLogger', '$http', 'rndAddToLatLon','uiGmapGoogleMapApi',
 		function ($scope, $timeout, $log, $http, rndAddToLatLon, GoogleMapApi) {
 
@@ -32,8 +30,6 @@ angular.module("mapsModule", ['uiGmapgoogle-maps'])
       		control: {},
       		show: true
 		}
-		console.log('controller')
-		console.log($scope.googleVersion)
 	});
 	
 }]);

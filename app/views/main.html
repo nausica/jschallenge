@@ -11,27 +11,33 @@
 -->
 
 <div class="row">
+
 	<div class="col-md-6">
-		<div class="jumbotron">
-		<form>
-			<div class="form-group">
-				<label for="exampleInputPassword1">Pickup</label>
+		<div class="highlight" ng-controller="DatetimePickerController">
+		<form name="searchForm"  ng-submit="submit(searchForm.$valid)" novalidate>
+			<div class="form-group" ng-class="{ 'has-error' : searchForm.pickupDate.$invalid && !searchForm.pickupDate.$pristine }">
+				<label for="pickupDate">Pickup</label>
 				<p class="input-group">
-            		<input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="dt" is-open="opened" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+            		<input type="text" name="pickupDate" class="form-control" datepicker-popup="{{format}}" ng-model="pickupDate" is-open="dpOpened.pickupOpened" min-date="minPickupDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
             		<span class="input-group-btn">
-        				<button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+        				<button type="button" class="btn btn-default" ng-click="open($event, 'pickupOpened')"><i class="glyphicon glyphicon-calendar"></i></button>
 					</span>
-					 <timepicker ng-model="mytime" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></timepicker>
+				</p>
+				<p>
+
+					 <timepicker ng-model="pickupTime" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></timepicker>
             	</p>
 			</div>
-			<div class="form-group">
-				<label for="exampleInputPassword1">Return</label>
+			<div class="form-group" ng-class="{ 'has-error' : searchForm.returnDate.$invalid && !searchForm.returnDate.$pristine }">
+				<label for="returnDate">Return</label>
 				<p class="input-group">
-            		<input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="dt" is-open="opened" min-date="minDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+            		<input type="text" name="returnDate" class="form-control" datepicker-popup="{{format}}" ng-model="returnDate" is-open="dpOpened.returnOpened" min-date="pickupDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
             		<span class="input-group-btn">
-        				<button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+        				<button type="button" class="btn btn-default" ng-click="open($event, 'returnOpened')"><i class="glyphicon glyphicon-calendar"></i></button>
 					</span>
-					 <timepicker ng-model="mytime" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></timepicker>
+				</p>
+				<p>
+					 <timepicker ng-model="returnTime" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></timepicker>
             	</p>
 			</div>
 			<button type="submit" class="btn btn-default">Submit</button>
