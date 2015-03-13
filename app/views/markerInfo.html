@@ -1,0 +1,14 @@
+<div ng-controller="InfoController" style="white-space:nowrap">
+	<div ng-cloak>
+		<p><strong>{{ parameter.message.title }}</strong></p>
+
+		<p>Available cars: {{ parameter.message.cars_available }} </p>
+
+		<p>
+			<a href="https://www.google.com/maps/dir/{{ parameter.message.position.lat }},{{ parameter.message.position.lon }}/{{ parameter.message.user_position.lat }},{{ parameter.message.user_position.lon }}" target="_blank" class="btn btn-primary btn-sm">
+				<i class="glyphicon glyphicon-flag"></i> 
+				Get directions
+			</a>
+		</p>
+	</div>
+</div>

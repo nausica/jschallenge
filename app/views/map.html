@@ -14,15 +14,22 @@
         <!-- predefined markers -->
         <!-- rendering via ng-repear, HIGH OVERHEAD via DOM Manipulation -->
         <ui-gmap-marker ng-repeat="m in map.markers" coords="m" icon="m.icon" click="onMarkerClicked(m)" idKey="m.id" options="m.options">
+            <ui-gmap-window
+                templateUrl="m.templatedInfoWindow.templateUrl"
+                templateParameter="m.templatedInfoWindow.templateParameter" ng-cloak>
+            </ui-gmap-window>
+            <!--
             <ui-gmap-window ng-cloak>
                     <p>{{ m.windowLabel }}</p>
                     <button>Get directions</button>
             </ui-gmap-window>
+        -->
         </ui-gmap-marker>
 
+        <!-- clicked marker -->
         <ui-gmap-marker coords="map.clickedMarker"  idKey="map.clickedMarker.id" options="map.clickedMarker.options">
-            
         </ui-gmap-marker>
+
     </ui-gmap-google-map>
 
 </div>

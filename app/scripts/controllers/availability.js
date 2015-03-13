@@ -14,6 +14,14 @@ angular.module("controllers.availability", [
 		libraries: 'weather,geometry,visualization'
 	});
 }])
+.controller('InfoController', function ($scope, $log) {
+	$scope.templateValue = 'hello from the template itself';
+	$scope.clickedButtonInWindow = function () {
+		var msg = 'clicked a window in the template!';
+		$log.info(msg);
+		alert(msg);
+	}
+})
 .controller("MapController",[
 	'$scope',
 	'$routeParams', 
@@ -84,14 +92,35 @@ angular.module("controllers.availability", [
 					}
 				};
 
-				// Availability markers
+				// Render availability markers
 				_.each($scope.availables, function (available, index) {
 					var m = {
 						id : index,
 						latitude: available.latitude,
 						longitude: available.longitude,
 						showWindow: false,
-						windowLabel: available.parking_name 
+						windowLabel: available.parking_name,
+						templatedInfoWindow: {
+							options: {
+								disableAutoPan: true
+							},
+							show: true,
+							templateUrl: 'views/markerInfo.html',
+							templateParameter: {
+								message: {
+									title: available.parking_name,
+									cars_available: available.cars_available,
+									position: {
+										lat: available.latitude,
+										lon: available.longitude
+									},
+									user_position: {
+										lat: $scope.location.coords.latitude,
+										lon: $scope.location.coords.longitude
+									}
+								}
+							}
+						}
 					};
 					$scope.map.markers.push(m);
 
