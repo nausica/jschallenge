@@ -7,7 +7,7 @@
  * # MainCtrl
  * Controller of the jschallengeApp
  */
-angular.module('controllers',[
+angular.module('controllers.main',[
 	'ui.bootstrap'])
 
 .controller('MainController', function($scope, $http) {
@@ -36,7 +36,6 @@ angular.module('controllers',[
 		pickupOpened: false,
 		returnOpened: false
 	};
-
 	$scope.open = function($event, opened) {
     	$event.preventDefault();
     	$event.stopPropagation();
@@ -52,11 +51,10 @@ angular.module('controllers',[
 
   	// Submit Search
   	$scope.submit = function(isValid) {
-  		console.log(isValid);
-
   		// Check validity of the params
   		if (isValid) {
   			
+  			// Merge Date/Time objects
   			$scope.pickupTime.setDate($scope.pickupDate.getDate());
   			$scope.pickupTime.setMonth($scope.pickupDate.getMonth());
   			$scope.pickupTime.setFullYear($scope.pickupDate.getFullYear());
@@ -64,12 +62,6 @@ angular.module('controllers',[
   			$scope.returnTime.setDate($scope.returnDate.getDate());
   			$scope.returnTime.setMonth($scope.returnDate.getMonth());
   			$scope.returnTime.setFullYear($scope.returnDate.getFullYear());
-
-	  		var start = Date.now() + 24 * 3600 * 1000;
-			var end = start + 2 * 3600 * 1000;
-
-			console.log($scope.pickupTime.getTime())
-			console.log($scope.returnTime.getTime())
 			
 			$location.path('/availability')
 				.search({

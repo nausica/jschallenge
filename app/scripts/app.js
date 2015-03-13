@@ -12,8 +12,8 @@ angular
 
 .module('jschallengeApp', [
 	'ngRoute', 
-	'controllers', 
-	'mapsModule'])
+	'controllers.main', 
+	'controllers.availability'])
 
 .config(['$routeProvider',
 	function($routeProvider) {
