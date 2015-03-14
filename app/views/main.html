@@ -11,8 +11,7 @@
 -->
 
 <div class="row">
-
-	<div class="col-md-6">
+	<div class="col-md-3 search-form-container">
 		<div class="highlight" ng-controller="DatetimePickerController">
 		<form name="searchForm"  ng-submit="submit(searchForm.$valid)" novalidate>
 			<div class="form-group" ng-class="{ 'has-error' : searchForm.pickupDate.$invalid && !searchForm.pickupDate.$pristine }">
@@ -20,7 +19,9 @@
 				<p class="input-group">
             		<input type="text" name="pickupDate" class="form-control" datepicker-popup="{{format}}" ng-model="pickupDate" is-open="dpOpened.pickupOpened" min-date="minPickupDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
             		<span class="input-group-btn">
-        				<button type="button" class="btn btn-default" ng-click="open($event, 'pickupOpened')"><i class="glyphicon glyphicon-calendar"></i></button>
+        				<button type="button" class="btn btn-default" ng-click="open($event, 'pickupOpened')">
+        					<i class="glyphicon glyphicon-calendar"></i>
+        				</button>
 					</span>
 				</p>
 				<p>
@@ -32,7 +33,9 @@
 				<p class="input-group">
             		<input type="text" name="returnDate" class="form-control" datepicker-popup="{{format}}" ng-model="returnDate" is-open="dpOpened.returnOpened" min-date="pickupDate" max-date="'2015-06-22'" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
             		<span class="input-group-btn">
-        				<button type="button" class="btn btn-default" ng-click="open($event, 'returnOpened')"><i class="glyphicon glyphicon-calendar"></i></button>
+        				<button type="button" class="btn btn-default" ng-click="open($event, 'returnOpened')">
+        					<i class="glyphicon glyphicon-calendar"></i>
+        				</button>
 					</span>
 				</p>
 				<p>
@@ -43,7 +46,6 @@
 		</form>
 		</div>
 	</div>
-	<div class="col-md-6">
-	 	
-	</div>
+	<div class="col-md-9 no-padding-left" ng-include="'views/map.html'"></div>
+
 </div>

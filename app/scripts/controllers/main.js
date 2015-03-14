@@ -8,7 +8,8 @@
  * Controller of the jschallengeApp
  */
 angular.module('controllers.main',[
-	'ui.bootstrap'])
+	'ui.bootstrap',
+	'resources.message'])
 
 .controller('MainController', function($scope, $http) {
 
@@ -26,7 +27,8 @@ angular.module('controllers.main',[
 	});
 */
 })
-.controller('DatetimePickerController', function($scope, $location) {
+.controller('DatetimePickerController', 
+	function($scope, $location, MessageService) {
 	
 	// Datepicker
 	$scope.pickupDate = new Date();
@@ -63,12 +65,17 @@ angular.module('controllers.main',[
   			$scope.returnTime.setMonth($scope.returnDate.getMonth());
   			$scope.returnTime.setFullYear($scope.returnDate.getFullYear());
 			
+			/*
 			$location.path('/availability')
 				.search({
 					book_start: $scope.pickupTime.getTime(),
 					book_end: $scope.returnTime.getTime()
 				})
-			
+			*/
+			MessageService.publish("search", {
+				book_start: $scope.pickupTime.getTime(), 
+				book_end: $scope.returnTime.getTime()
+			});
 		}	
   	};
 });

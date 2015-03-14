@@ -22,10 +22,12 @@ angular
     		templateUrl: 'views/main.html',
     		controller: 'MainController'
     	}).
+    	/*
     	when('/availability', {
         	templateUrl: 'views/map.html',
         	controller: 'MapController'
       	}).
+		*/
     	otherwise({
     		redirectTo: '/'
     	});

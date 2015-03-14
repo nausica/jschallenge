@@ -2,7 +2,9 @@
 angular.module("controllers.availability", [
 	'uiGmapgoogle-maps',
 	'resources.availability',
-	'resources.geolocation'])
+	'resources.geolocation',
+	'resources.message',
+	'providers.google.distancematrix'])
 
 .value("rndAddToLatLon", function () {
 	return Math.floor(((Math.random() < 0.5 ? -1 : 1) * 2) + 1);
@@ -14,34 +16,28 @@ angular.module("controllers.availability", [
 		libraries: 'weather,geometry,visualization'
 	});
 }])
-.controller('InfoController', function ($scope, $log) {
+.controller('InfoController', function ($scope) {
 	$scope.templateValue = 'hello from the template itself';
 	$scope.clickedButtonInWindow = function () {
 		var msg = 'clicked a window in the template!';
-		$log.info(msg);
 		alert(msg);
 	}
 })
-.controller("MapController",[
+.controller('MapController',[
 	'$scope',
 	'$routeParams', 
 	'$timeout', 
-	'uiGmapLogger', 
-	'$http', 
 	'rndAddToLatLon',
 	'uiGmapGoogleMapApi',
 	'AvailabilityService',
 	'GeolocationService',
-	function ($scope, $routeParams, $timeout, $log, $http, rndAddToLatLon, GoogleMapApi, AvailabilityService, GeolocationService) {
+	'MessageService',
+	'GoogleDistanceMatrix',
+	function ($scope, $routeParams, $timeout, rndAddToLatLon, GoogleMapApi, AvailabilityService, GeolocationService, MessageService, GoogleDistanceMatrix) {
 
-        AvailabilityService
-            .getByDates($routeParams.book_start, $routeParams.book_end)
-            .then( function( availables )
-            {
-                $scope.availables = availables;
-                console.log(availables);
-                return GeolocationService.getLocation(); 
-            })
+		// Get location from browser and render initial map
+		GeolocationService
+			.getLocation()
             .then( function( location )
             {
                 $scope.location = location;
@@ -91,39 +87,75 @@ angular.module("controllers.availability", [
 						}
 					}
 				};
+			});
+			
+			// Subscribe to changes in search
+			MessageService.subscribe('search', function(name, parameters){
+				console.log(parameters)
+				$scope.refreshMap(parameters);
+			});
 
-				// Render availability markers
-				_.each($scope.availables, function (available, index) {
-					var m = {
-						id : index,
-						latitude: available.latitude,
-						longitude: available.longitude,
-						showWindow: false,
-						windowLabel: available.parking_name,
-						templatedInfoWindow: {
-							options: {
-								disableAutoPan: true
-							},
-							show: true,
-							templateUrl: 'views/markerInfo.html',
-							templateParameter: {
-								message: {
-									title: available.parking_name,
-									cars_available: available.cars_available,
-									position: {
-										lat: available.latitude,
-										lon: available.longitude
+			// Refresh map with availability and get distances from Directions API
+			$scope.refreshMap = function(params) {
+
+				var buildCoordPaar = function(obj) { return obj.latitude + ',' + obj.longitude; };
+				var origin = buildCoordPaar( $scope.location.coords );
+				var destinations, args;
+
+				// Empty markers
+				$scope.markers = [];
+
+				// Get Data from availability and directions
+        		AvailabilityService
+            		.getByDates(params.book_start, params.book_end)
+            		.then( function( availables ) {
+		                $scope.availables = availables;
+		                destinations = _.map(availables, buildCoordPaar)
+		                				//.join('|');
+						//return DirectionsService.getDistanceMatrix(origin, destinations);
+						args = {
+							origins: [origin],
+							destinations: destinations
+						};
+						
+						return GoogleDistanceMatrix.getDistanceMatrix(args)
+					})
+					.then( function (distanceMatrix) {
+						console.log(distanceMatrix);
+						$scope.distanceMatrix = distanceMatrix;
+						// Render availability markers
+						_.each($scope.availables, function (available, index) {
+							var m = {
+								id : index,
+								latitude: available.latitude,
+								longitude: available.longitude,
+								showWindow: false,
+								windowLabel: available.parking_name,
+								templatedInfoWindow: {
+									options: {
+										disableAutoPan: true
 									},
-									user_position: {
-										lat: $scope.location.coords.latitude,
-										lon: $scope.location.coords.longitude
+									show: true,
+									templateUrl: 'views/markerInfo.html',
+									templateParameter: {
+										message: {
+											title: available.parking_name,
+											cars_available: available.cars_available,
+											position: {
+												lat: available.latitude,
+												lon: available.longitude
+											},
+											user_position: {
+												lat: $scope.location.coords.latitude,
+												lon: $scope.location.coords.longitude
+											},
+											distance: $scope.distanceMatrix.rows[0].elements[index].distance.text
+										}
 									}
 								}
-							}
-						}
-					};
-					$scope.map.markers.push(m);
-
-				});
-			});
+							};
+							$scope.map.markers.push(m);
+						});
+					})
+			};
 }]);
