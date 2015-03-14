@@ -1,3 +1,4 @@
+/*globals google */
 'use strict';
 
 angular.module('providers.google.distancematrix', [])
@@ -15,13 +16,13 @@ angular.module('providers.google.distancematrix', [])
             var _travelModes = [];
             var _unitSystems = [];
 
-            _travelModes['driving'] = googleMaps.TravelMode.DRIVING;
-            _travelModes['bicycling'] = googleMaps.TravelMode.BICYCLING;
-            _travelModes['transit'] = googleMaps.TravelMode.TRANSIT;
-            _travelModes['walking'] = googleMaps.TravelMode.WALKING;
+            _travelModes.driving = googleMaps.TravelMode.DRIVING;
+            _travelModes.bicycling = googleMaps.TravelMode.BICYCLING;
+            _travelModes.transit = googleMaps.TravelMode.TRANSIT;
+            _travelModes.walking = googleMaps.TravelMode.WALKING;
             
-            _unitSystems['metric'] = googleMaps.UnitSystem.METRIC;
-            _unitSystems['imperial'] = googleMaps.UnitSystem.IMPERIAL;
+            _unitSystems.metric = googleMaps.UnitSystem.METRIC;
+            _unitSystems.imperial = googleMaps.UnitSystem.IMPERIAL;
 
             function exec(args) {
                 var req = angular.copy(defaults, {});
@@ -30,7 +31,7 @@ angular.module('providers.google.distancematrix', [])
                 var elem, service;
 
                 function callback(results, status) {
-                    if (status == googleMaps.DistanceMatrixStatus.OK || status == googleMaps.DistanceMatrixStatus.ZERO_RESULTS) {
+                    if (status === googleMaps.DistanceMatrixStatus.OK || status === googleMaps.DistanceMatrixStatus.ZERO_RESULTS) {
                         $rootScope.$apply(function() {
                             return deferred.resolve(results);
                         });
@@ -48,7 +49,7 @@ angular.module('providers.google.distancematrix', [])
                     elem = $window.document.createElement('div');
                 }
                 service = new googleMaps.DistanceMatrixService();
-                service['getDistanceMatrix'](req, callback);
+                service.getDistanceMatrix(req, callback);
                 return deferred.promise;
             }
 

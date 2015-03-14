@@ -1,3 +1,4 @@
+/* globals alert */
 'use strict';
 
 /**
@@ -11,18 +12,17 @@ angular.module('controllers.main',[
 	'ui.bootstrap',
 	'resources.message'])
 
-.controller('MainController', function($scope, $http) {
+.controller('MainController', function() {
 	
 })
-.controller('HeaderController', function($scope, $http) {
+.controller('HeaderController', function($scope) {
 	$scope.isCollapsed = false;
-
 
 	$scope.submitSuggestion = function() {
 		// This is actually doing nothing, but it'd be a nice feature.
 		// Although maybe you have it already!
 		alert('Your suggestion will be considered!');
-	}
+	};
 })
 
 .controller('DatetimePickerController', 
@@ -70,9 +70,9 @@ angular.module('controllers.main',[
 					book_end: $scope.returnTime.getTime()
 				})
 			*/
-			MessageService.publish("search", {
-				book_start: $scope.pickupTime.getTime(), 
-				book_end: $scope.returnTime.getTime()
+			MessageService.publish('search', {
+				bookStart: $scope.pickupTime.getTime(), 
+				bookEnd: $scope.returnTime.getTime()
 			});
 		}	
   	};

@@ -1,12 +1,13 @@
+/* globals _ */
 'use strict';
-angular.module("controllers.availability", [
+angular.module('controllers.availability', [
 	'uiGmapgoogle-maps',
 	'resources.availability',
 	'resources.geolocation',
 	'resources.message',
 	'providers.google.distancematrix'])
 
-.value("rndAddToLatLon", function () {
+.value('rndAddToLatLon', function () {
 	return Math.floor(((Math.random() < 0.5 ? -1 : 1) * 2) + 1);
 })
 
@@ -29,8 +30,6 @@ angular.module("controllers.availability", [
 	'GoogleDistanceMatrix',
 	function ($scope, $routeParams, $timeout, rndAddToLatLon, GoogleMapApi, AvailabilityService, GeolocationService, MessageService, GoogleDistanceMatrix) {
 
-		// Collapse info window
-		$scope.isCollapsed = false;
 
 		// Get location from browser and render initial map
 		GeolocationService
@@ -38,7 +37,6 @@ angular.module("controllers.availability", [
 			.then( function( location )
 			{
 				$scope.location = location;
-				console.log(location);
 				return GoogleMapApi;
 			})
 			.then( function( maps )
@@ -50,7 +48,7 @@ angular.module("controllers.availability", [
 						latitude: $scope.location ? $scope.location.coords.latitude : 1,
 						longitude: $scope.location ? $scope.location.coords.longitude : -73
 					},
-					zoom: 16,
+					zoom: 14,
 					dragging: true,
 					bounds : {},
 					options: {},
@@ -72,8 +70,8 @@ angular.module("controllers.availability", [
 								id: 0,
 								options: {
 									labelContent: 'I want smove here: ' + 'lat: ' + lat + ' long: ' + lon,
-									labelClass: "marker-labels",
-									labelAnchor: "50 0"
+									labelClass: 'marker-labels',
+									labelAnchor: '50 0'
 								},
 								latitude: lat,
 								longitude: lon
@@ -95,14 +93,14 @@ angular.module("controllers.availability", [
 
 				var buildCoordPaar = function(obj) { return obj.latitude + ',' + obj.longitude; };
 				var origin = buildCoordPaar( $scope.location.coords );
-				var destinations, args, distances, closest, index_closest;
+				var destinations, args, distances, closest, indexClosest;
 
 				// Empty markers
 				$scope.markers = [];
 
 				// Get Data from availability and directions
 				AvailabilityService
-					.getByDates(params.book_start, params.book_end)
+					.getByDates(params.bookStart, params.bookEnd)
 					.then( function( availables ) {
 						$scope.availables = availables;
 						destinations = _.map(availables, buildCoordPaar);
@@ -111,7 +109,7 @@ angular.module("controllers.availability", [
 							destinations: destinations
 						};
 						
-						return GoogleDistanceMatrix.getDistanceMatrix(args)
+						return GoogleDistanceMatrix.getDistanceMatrix(args);
 					})
 					.then( function (distanceMatrix) {
 						$scope.distanceMatrix = distanceMatrix;
@@ -121,18 +119,18 @@ angular.module("controllers.availability", [
 						closest = _.min(distances, function(elem) {
 							return elem.distance.value;
 						});
-						index_closest = _.findIndex(distances, closest);
+						indexClosest = _.findIndex(distances, closest);
 
 						$scope.map.center = {
-							latitude: $scope.availables[ index_closest ].latitude,
-							longitude: $scope.availables[ index_closest ].longitude
+							latitude: $scope.availables[ indexClosest ].latitude,
+							longitude: $scope.availables[ indexClosest ].longitude
 						};
 
 						// Render availability markers
 						_.each($scope.availables, function (available, index) {
 							var m = {
 								id : index,
-								icon: index === index_closest ? 'images/blue_marker.png' : undefined,
+								icon: index === indexClosest ? 'images/blue_marker.png' : undefined,
 								latitude: available.latitude,
 								longitude: available.longitude,
 								showWindow: false,
@@ -162,6 +160,6 @@ angular.module("controllers.availability", [
 							};
 							$scope.map.markers.push(m);
 						});
-					})
+					});
 			};
 }]);

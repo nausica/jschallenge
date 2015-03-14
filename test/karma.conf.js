@@ -18,6 +18,7 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
+      'http://maps.googleapis.com/maps/api/js?sensor=false&language=en',
       // bower:js
       'bower_components/angular/angular.js',
       'bower_components/lodash/dist/lodash.compat.js',
@@ -29,6 +30,8 @@ module.exports = function(config) {
       'app/scripts/**/*.js',
       'test/mock/**/*.js',
       'test/spec/**/*.js'
+
+     
     ],
 
     // list of files / patterns to exclude

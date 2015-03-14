@@ -1,5 +1,5 @@
 
-"use strict";
+'use strict';
 
 angular.module('resources.message', [])
 	.service('MessageService', function ($rootScope) {
@@ -8,9 +8,9 @@ angular.module('resources.message', [])
 		self.publish = function(name, parameters) {
 			parameters.timeStamp = Date.now();
 			$rootScope.$broadcast(name, parameters);
-		}
+		};
 
 		self.subscribe = function(name, listener) {
 			$rootScope.$on(name, listener);
-		}
+		};
 	});

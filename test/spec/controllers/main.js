@@ -1,22 +1,38 @@
 'use strict';
 
-describe('Controller: MainCtrl', function () {
 
-  // load the controller's module
-  beforeEach(module('jschallengeApp'));
-
-  var MainCtrl,
-    scope;
-
-  // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope) {
-    scope = $rootScope.$new();
-    MainCtrl = $controller('MainCtrl', {
-      $scope: scope
+describe('Controller: DatetimePickerController', function () {
+	// load the controller's module
+	beforeEach(module('controllers.main'));
+	beforeEach(function() {
+        module('resources.message');
     });
-  }));
 
-  it('should attach a list of awesomeThings to the scope', function () {
-    expect(scope.awesomeThings.length).toBe(3);
-  });
+	var DatetimePickerController,
+		scope,
+		service;
+
+	// Initialize the controller and a mock scope
+	beforeEach(inject(function ($controller, $rootScope, MessageService) {
+		scope = $rootScope.$new();
+		DatetimePickerController = $controller('DatetimePickerController', {
+			$scope: scope
+		});
+		
+		service = MessageService;
+	}));
+
+	it('should initialize pickup/return date/time', function () {
+		expect(scope.pickupTime).not.toBe(null);
+		expect(scope.returnTime).not.toBe(null);
+		expect(scope.pickupDate).not.toBe(null);
+		expect(scope.returnDate).not.toBe(null);
+	});
+
+	it('submit should call the messageService with search', function() {
+    	spyOn(service, 'publish');
+    	scope.submit();
+    	expect(service.publish).toHaveBeenCalled;
+    	
+	});
 });

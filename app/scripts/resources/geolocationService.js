@@ -4,10 +4,9 @@ angular.module('resources.geolocation', [])
 	.service('GeolocationService', [
 		'$q',
 		'$rootScope',
-		'$window',
-		'$timeout', function ($q, $rootScope, $window, $timeout) {
+		'$window', function ($q, $rootScope, $window) {
     return {
-		getLocation: function (opts) {
+		getLocation: function () {
 			var deferred = $q.defer();
 				if ($window.navigator && $window.navigator.geolocation) {
 					$window.navigator.geolocation.getCurrentPosition( function(position) {
