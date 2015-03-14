@@ -16,13 +16,7 @@ angular.module("controllers.availability", [
 		libraries: 'weather,geometry,visualization'
 	});
 }])
-.controller('InfoController', function ($scope) {
-	$scope.templateValue = 'hello from the template itself';
-	$scope.clickedButtonInWindow = function () {
-		var msg = 'clicked a window in the template!';
-		alert(msg);
-	}
-})
+
 .controller('MapController',[
 	'$scope',
 	'$routeParams', 
@@ -35,18 +29,21 @@ angular.module("controllers.availability", [
 	'GoogleDistanceMatrix',
 	function ($scope, $routeParams, $timeout, rndAddToLatLon, GoogleMapApi, AvailabilityService, GeolocationService, MessageService, GoogleDistanceMatrix) {
 
+		// Collapse info window
+		$scope.isCollapsed = false;
+
 		// Get location from browser and render initial map
 		GeolocationService
 			.getLocation()
-            .then( function( location )
-            {
-                $scope.location = location;
-                console.log(location);
-                return GoogleMapApi;
-            })
-            .then( function( maps )
-            {
-                $scope.googleVersion = maps.version;
+			.then( function( location )
+			{
+				$scope.location = location;
+				console.log(location);
+				return GoogleMapApi;
+			})
+			.then( function( maps )
+			{
+				$scope.googleVersion = maps.version;
 				maps.visualRefresh = true;
 				$scope.map = {
 					center: {
@@ -66,7 +63,6 @@ angular.module("controllers.availability", [
 					},
 					events: {
 						click: function (mapModel, eventName, originalEventArgs) {
-							console.log("user defined event: " + eventName, mapModel, originalEventArgs);
 
 							var e = originalEventArgs[0];
 							var lat = e.latLng.lat();
@@ -75,7 +71,7 @@ angular.module("controllers.availability", [
 							$scope.map.clickedMarker = {
 								id: 0,
 								options: {
-									labelContent: 'You clicked here ' + 'lat: ' + lat + ' long: ' + lon,
+									labelContent: 'I want smove here: ' + 'lat: ' + lat + ' long: ' + lon,
 									labelClass: "marker-labels",
 									labelAnchor: "50 0"
 								},
@@ -106,12 +102,12 @@ angular.module("controllers.availability", [
 				$scope.markers = [];
 
 				// Get Data from availability and directions
-        		AvailabilityService
-            		.getByDates(params.book_start, params.book_end)
-            		.then( function( availables ) {
-		                $scope.availables = availables;
-		                destinations = _.map(availables, buildCoordPaar)
-		                				//.join('|');
+				AvailabilityService
+					.getByDates(params.book_start, params.book_end)
+					.then( function( availables ) {
+						$scope.availables = availables;
+						destinations = _.map(availables, buildCoordPaar)
+										//.join('|');
 						//return DirectionsService.getDistanceMatrix(origin, destinations);
 						args = {
 							origins: [origin],

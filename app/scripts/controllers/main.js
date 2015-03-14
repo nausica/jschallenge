@@ -12,21 +12,19 @@ angular.module('controllers.main',[
 	'resources.message'])
 
 .controller('MainController', function($scope, $http) {
-
-	// Query for a booking in 1 day from now, for 2 hours.
-	var start = Date.now() + 24 * 3600 * 1000;
-	var end = start + 2 * 3600 * 1000;
-	var url = 'http://api1.shubacca.com/provider/1/availability?book_start=' + start + '&book_end=' + end;
-	$scope.awesomeThings = [1,2,3];
-	/*
-	$http.get(url).success(function(result) {
-		console.log('Result from the API call:', result);
-	}).error(function(err) {
-		// Hum, this is odd ... contact us...
-		console.error(err);
-	});
-*/
+	
 })
+.controller('HeaderController', function($scope, $http) {
+	$scope.isCollapsed = false;
+
+
+	$scope.submitSuggestion = function() {
+		// This is actually doing nothing, but it'd be a nice feature.
+		// Although maybe you have it already!
+		alert('Your suggestion will be considered!');
+	}
+})
+
 .controller('DatetimePickerController', 
 	function($scope, $location, MessageService) {
 	
