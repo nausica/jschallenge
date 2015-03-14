@@ -50,7 +50,7 @@ angular.module("controllers.availability", [
 						latitude: $scope.location ? $scope.location.coords.latitude : 1,
 						longitude: $scope.location ? $scope.location.coords.longitude : -73
 					},
-					zoom: 12,
+					zoom: 16,
 					dragging: true,
 					bounds : {},
 					options: {},
@@ -87,7 +87,6 @@ angular.module("controllers.availability", [
 			
 			// Subscribe to changes in search
 			MessageService.subscribe('search', function(name, parameters){
-				console.log(parameters)
 				$scope.refreshMap(parameters);
 			});
 
@@ -96,7 +95,7 @@ angular.module("controllers.availability", [
 
 				var buildCoordPaar = function(obj) { return obj.latitude + ',' + obj.longitude; };
 				var origin = buildCoordPaar( $scope.location.coords );
-				var destinations, args;
+				var destinations, args, distances, closest, index_closest;
 
 				// Empty markers
 				$scope.markers = [];
@@ -106,9 +105,7 @@ angular.module("controllers.availability", [
 					.getByDates(params.book_start, params.book_end)
 					.then( function( availables ) {
 						$scope.availables = availables;
-						destinations = _.map(availables, buildCoordPaar)
-										//.join('|');
-						//return DirectionsService.getDistanceMatrix(origin, destinations);
+						destinations = _.map(availables, buildCoordPaar);
 						args = {
 							origins: [origin],
 							destinations: destinations
@@ -117,12 +114,25 @@ angular.module("controllers.availability", [
 						return GoogleDistanceMatrix.getDistanceMatrix(args)
 					})
 					.then( function (distanceMatrix) {
-						console.log(distanceMatrix);
 						$scope.distanceMatrix = distanceMatrix;
+						distances = $scope.distanceMatrix.rows[0].elements; // Only one origin
+						
+						// Center map on closest
+						closest = _.min(distances, function(elem) {
+							return elem.distance.value;
+						});
+						index_closest = _.findIndex(distances, closest);
+
+						$scope.map.center = {
+							latitude: $scope.availables[ index_closest ].latitude,
+							longitude: $scope.availables[ index_closest ].longitude
+						};
+
 						// Render availability markers
 						_.each($scope.availables, function (available, index) {
 							var m = {
 								id : index,
+								icon: index === index_closest ? 'images/blue_marker.png' : undefined,
 								latitude: available.latitude,
 								longitude: available.longitude,
 								showWindow: false,
@@ -145,7 +155,7 @@ angular.module("controllers.availability", [
 												lat: $scope.location.coords.latitude,
 												lon: $scope.location.coords.longitude
 											},
-											distance: $scope.distanceMatrix.rows[0].elements[index].distance.text
+											distance: distances[index].distance.text
 										}
 									}
 								}
