@@ -6,6 +6,7 @@ version 0.11.1.
 ## Dependencies
 
 `npm install` 
+
 `bower install`
 
 ## Build & development
